@@ -6,7 +6,6 @@ public class ThreadsRace {
 	
 	static Scanner scanner = new Scanner(System.in);
 	static ArrayList<Thread> runnerThreads = new ArrayList<>();
-	static Thread race = new Thread();
 
 	public static void main(String[] args) throws InterruptedException {
 		System.out.println("Enter number of threads between 2-5");
