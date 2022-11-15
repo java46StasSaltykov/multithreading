@@ -2,24 +2,37 @@ package telran.multithreading;
 
 public class Printer extends Thread {
 	
-	private int nPrints;
-	private char symb;
+	private static final long TIMEOUT = 2000;
+	private String symbols;
+	private boolean running = true;
 	
-	public Printer(int nPrints, char symb) {
-		this.nPrints = nPrints;
-		this.symb = symb;
+	public Printer(String symbols) {
+		this.symbols = symbols;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 	@Override
 	public void run() {
-		for (int i = 0; i < nPrints; i++) {
+		int length = symbols.length();
+		int index = 0;
+		while (running) {
+			System.out.println(symbols.charAt(index));
 			try {
-				sleep(10);
+				sleep(TIMEOUT);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				index++;
+				if (index == length) {
+					index = 0;
+				}
 			}
-			System.out.println(symb);
 		}
 	}
-
+	
 }
