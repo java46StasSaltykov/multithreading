@@ -1,5 +1,6 @@
 package telran.multithreading.games;
 
+import java.time.Instant;
 import java.util.stream.IntStream;
 
 import telran.view.*;
@@ -11,6 +12,7 @@ public class RaceAppl {
 	private static final int MAX_DISTANCE = 1000;
 	private static final int MIN_SLEEP = 2;
 	private static final int MAX_SLEEP = 5;
+	public static Instant startTime;
 
 	public static void main(String[] args) {
 		InputOutput io = new ConsoleInputOutput();
@@ -30,9 +32,11 @@ public class RaceAppl {
 		int distance = io.readInt("Enter distance", "Wrong Distance", MIN_DISTANCE, MAX_DISTANCE);
 		Race race = new Race(distance, MIN_SLEEP, MAX_SLEEP);
 		Runner[] runners = new Runner[nThreads];
+		startTime = Instant.now();
 		startRunners(runners, race);
 		joinRunners(runners);
 		displayWinner(race);
+		race.getResults();
 	}
 
 	private static void displayWinner(Race race) {
