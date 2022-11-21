@@ -1,20 +1,30 @@
 package telran.multithreading.games;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.time.Instant;
+import java.util.List;
 
 public class Race {
 	private int distance;
 	private int minSleep;
 	private int maxSleep;
 	private int winner = -1;
-	public static Map<Long, Integer> results;
+	private List<Runner> resultsTable;
+	private Instant startTime;
 
-	public Race(int distance, int minSleep, int maxSleep) {
+	public List<Runner> getResultsTable() {
+		return resultsTable;
+	}
+
+	public Instant getStartTime() {
+		return startTime;
+	}
+
+	public Race(int distance, int minSleep, int maxSleep, List<Runner> resultsTable, Instant startTime) {
 		this.distance = distance;
 		this.minSleep = minSleep;
 		this.maxSleep = maxSleep;
-		results = new TreeMap<Long, Integer>();
+		this.resultsTable = resultsTable;
+		this.startTime = startTime;
 	}
 
 	public int getWinner() {
@@ -37,17 +47,5 @@ public class Race {
 
 	public int getMaxSleep() {
 		return maxSleep;
-	}
-	
-	synchronized public static void writeResults(Long runningTime, Integer runnerId) {
-		results.put(runningTime, runnerId);
-	}
-
-	public void getResults() {
-		int place = 1;
-		System.out.print("\nResults:\nplace     racer number      time\n");
-		for (Entry<Long, Integer> entry : results.entrySet()) {
-			System.out.println(place++ + "           " + entry.getValue() + "               " + entry.getKey());
-		}
 	}
 }
