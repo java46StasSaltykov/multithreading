@@ -6,7 +6,7 @@ public class Race {
 	private int distance;
 	private int minSleep;
 	private int maxSleep;
-	private AtomicInteger winner = new AtomicInteger();
+	public AtomicInteger winner = new AtomicInteger(-1);
 
 	public Race(int distance, int minSleep, int maxSleep) {
 		this.distance = distance;
@@ -16,12 +16,6 @@ public class Race {
 
 	public int getWinner() {
 		return winner.get();
-	}
-
-	public void setWinner(int winner) {
-		if (this.winner.get() == 0) {
-			this.winner.addAndGet(winner);
-		}
 	}
 
 	public int getDistance() {
