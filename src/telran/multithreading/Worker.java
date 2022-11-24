@@ -24,8 +24,8 @@ public class Worker extends Thread {
 	}
 	
 	void f2() {
-		synchronized (resource1) {
-			synchronized (resource3) {
+		synchronized (resource3) {
+			synchronized (resource1) {
 
 			}
 		}
