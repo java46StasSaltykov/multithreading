@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import telran.multithreading.MessageBox;
 
 public class Receiver extends Thread {
-	
 	private static AtomicInteger messagesCounter = new AtomicInteger(0);
 	private MessageBox messageBox;
 	private boolean running = true;
