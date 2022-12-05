@@ -7,19 +7,18 @@ import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
 public class GarageImitatorAppl {
-	
 	static final long MODEL_TIME = 10000;
 	static final long MIN_SERVICE_TIME = 60;
 	static final long MAX_SERVICE_TIME = 600;
-	static final int N_WORKERS = 30;
-	static final int PROB_CAR_MIN = 20;
-	private static final int CAPACITY = 15;
+	static final int N_WORKERS = 5;
+	static final int PROB_CAR_MIN = 10;
+	private static final int CAPCITY = 15;
 	static int rejectsCounter = 0;
 	static int carsCounter = 0;
-	static BlockingQueue<Car> cars = new LinkedBlockingQueue<>(CAPACITY);
+	static BlockingQueue<Car> cars = new MyBlockingQueueImpl<>(CAPCITY); // FIXME replace with MyBlockingQueueImpl
 
 	public static void main(String[] args) throws InterruptedException {
-		
+
 		Worker workers[] = new Worker[N_WORKERS];
 		startWorkers(workers);
 		Instant start = Instant.now();
@@ -35,8 +34,9 @@ public class GarageImitatorAppl {
 			Thread.sleep(1);
 		}
 		stopWorkers(workers);
-		System.out.printf("modeling time %d hours; cars served %d; cars rejected %d", 
-				(ChronoUnit.MILLIS.between(start, Instant.now()) / 60), carsCounter, rejectsCounter);
+		System.out.printf("modelling time %d hours; cars served %d; cars rejected %d",
+				ChronoUnit.MILLIS.between(start, Instant.now()) / 60, carsCounter, rejectsCounter);
+
 	}
 
 	private static void stopWorkers(Worker[] workers) {
@@ -44,7 +44,7 @@ public class GarageImitatorAppl {
 			w.setRunning(false);
 			w.interrupt();
 		});
-		
+
 	}
 
 	private static Car getCar() {
@@ -56,8 +56,8 @@ public class GarageImitatorAppl {
 	}
 
 	private static long getRandomNumber(long min, long max) {
+
 		return ThreadLocalRandom.current().nextLong(min, max);
-		
 	}
 
 	private static void startWorkers(Worker[] workers) {
@@ -65,6 +65,7 @@ public class GarageImitatorAppl {
 			workers[i] = new Worker(cars);
 			workers[i].start();
 		});
+
 	}
-	
+
 }
