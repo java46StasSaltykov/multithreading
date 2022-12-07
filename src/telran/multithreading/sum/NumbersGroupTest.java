@@ -2,8 +2,6 @@ package telran.multithreading.sum;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
 
