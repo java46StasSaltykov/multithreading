@@ -1,4 +1,4 @@
-package telran.multithreading.sum;
+package telran.multithreading;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.concurrent.ThreadLocalRandom;
