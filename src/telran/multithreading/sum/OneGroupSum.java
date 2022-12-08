@@ -3,20 +3,20 @@ package telran.multithreading.sum;
 import java.util.Arrays;
 
 public class OneGroupSum implements Runnable {
-	
 	private int[] group;
-	private Long res = 0L;
-	
+	private long res;
+
 	public OneGroupSum(int[] group) {
 		this.group = group;
 	}
 
 	@Override
 	public void run() {
-		res = (long) Arrays.stream(group).sum();
+		res = Arrays.stream(group).asLongStream().sum();
+
 	}
 
-	public Long getRes() {
+	public long getRes() {
 		return res;
 	}
 

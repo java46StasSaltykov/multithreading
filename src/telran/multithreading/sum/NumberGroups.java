@@ -1,38 +1,44 @@
 package telran.multithreading.sum;
 
-import java.util.concurrent.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class NumberGroups {
-	
+	private static final int DEFAULT_N_THREADS = 4;
 	private int[][] groups;
-	private int nThreads = 4;
-	
+	private int nThreads = DEFAULT_N_THREADS;
+
 	public NumberGroups(int[][] groups) {
 		this.groups = groups;
 	}
-	
-	public long computeSum() throws InterruptedException {
-		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
-		long res = 0;
-		for (int[] group : groups) {
-			OneGroupSum groupSum = new OneGroupSum(group);
-			executor.execute(groupSum);
-			Thread.sleep(10);
-			res += groupSum.getRes();
-		}
-		return res;
-	}
-
-	public int getnThreads() {
-		return nThreads;
-	}
 
 	public void setnThreads(int nThreads) {
-		if (nThreads > 0) {
-			this.nThreads = nThreads;
-		} else {
-			throw new IllegalArgumentException("Should be a positive number of threads.");
+		this.nThreads = nThreads;
+	}
+
+	public long computeSum() {
+		ExecutorService executor = Executors.newFixedThreadPool(nThreads);
+		List<OneGroupSum> groupSums = Arrays.stream(groups).map(group -> new OneGroupSum(group)).toList();
+		startGroups(groupSums, executor);
+		waitingGroups(executor);
+		return groupSums.stream().mapToLong(OneGroupSum::getRes).sum();
+	}
+
+	private void startGroups(List<OneGroupSum> groupSums, ExecutorService executor) {
+		groupSums.forEach(executor::execute);
+
+	}
+
+	private void waitingGroups(ExecutorService executor) {
+		executor.shutdown();
+		try {
+			executor.awaitTermination(10, TimeUnit.HOURS);
+		} catch (InterruptedException e) {
+
 		}
 	}
-	
+
 }

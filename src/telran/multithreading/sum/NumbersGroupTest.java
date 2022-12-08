@@ -1,40 +1,35 @@
 package telran.multithreading.sum;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
-class NumbersGroupTest {
-	
-	private static final long SIZE = 1000;
-	private static final int MIN = 1;
-	private static final int MAX = 10000;
-	
-	private int[][] ar1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+class NumberGroupsTest {
+	private static final int N_GROUPS = 100000;
+	private static final int N_NUMBERS_IN_GROUP = 100;
+	int[][] groupsPerformance = getGroups(N_GROUPS, N_NUMBERS_IN_GROUP);
 
 	@Test
-	void functionalTest() throws InterruptedException {
-		NumberGroups groups = new NumberGroups(ar1);
-		long res = groups.computeSum();
-		assertEquals(45, res);
-	}
-	
-	@Test
-	void performanceTest() throws InterruptedException {	
-		NumberGroups groups = new NumberGroups(getGroups());
-//		groups.setnThreads(5);
-//		groups.setnThreads(10);
-		groups.setnThreads(20);
-		long performance = groups.computeSum();
+	void functionalTest() {
+		int[][] groups = { { 1, 2, 3 }, { 4, 5, 6 } };
+		assertEquals(21, new NumberGroups(groups).computeSum());
+
 	}
 
-	int[][] getGroups() {
-		int[][] res = new int[(int) SIZE][(int) SIZE];
-		for (int i = 0; i < SIZE; i++) {
-			res[i] = new Random().ints(SIZE, MIN, MAX).toArray();
-		}
-		return res;
+	@Test
+	void performanceTest() {
+		NumberGroups numberGroups = new NumberGroups(groupsPerformance);
+		numberGroups.setnThreads(4);
+		numberGroups.computeSum();
+	}
+
+	int[][] getGroups(int nGroups, int nNumbersInGroup) {
+		return Stream.generate(() -> getGroup(nNumbersInGroup)).limit(nGroups).toArray(int[][]::new);
+	}
+
+	private int[] getGroup(int nNumbers) {
+		return Stream.generate(() -> ThreadLocalRandom.current().nextInt()).limit(nNumbers).mapToInt(x -> x).toArray();
 	}
 
 }
